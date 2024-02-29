@@ -3,11 +3,37 @@ import { useLocalSearchParams } from 'expo-router';
 import exercises from '../../assets/data/exercises.json';
 import {Stack} from 'expo-router';
 import {useState} from 'react';
-
+import {gql} from 'graphql-request';
+import {useQuery} from '@tanstack/react-query';
+import graphqlClient from '../graphqlClient';
+import { ActivityIndicator } from 'react-native-web';
+const exerciseQuery=gql`
+  query exercises($name: String) {
+    exercises(name: $name) {
+      name
+      muscle
+      instructions
+      equipment
+    }
+  }
+`
 export default function ExerciseDetaulsScreen(){
-    const params=useLocalSearchParams();
+    const {name}=useLocalSearchParams();
+    const{data, isLoading,error}=useQuery({
+      queryKey:['exercises',name],
+      queryFn: ()=> graphqlClient.request(exerciseQuery,{name}),
+    
+    });
     const [isInstructionExpanded, setInstructionExpanded]=useState(false);
-    const exercise=exercises.find((item)=>item.name===params.name);
+
+    if(isLoading){
+      return<ActivityIndicator/>;
+  
+    }
+    if(error){
+      return <Text> Failed to fetch data</Text>
+    }
+    const exercise=data.exercises[0];
     if(!exercise){
             return <Text> Exercise not found</Text>;
         
@@ -21,7 +47,7 @@ export default function ExerciseDetaulsScreen(){
         {exercise.name}
         </Text>
       <Text style={styles.exerciseSubtitle}>
-        <Text style={styles.subValue}>{exercise.muscle}</Text> 
+        <Text style={styles.subValue}>{exercise.muscle} | </Text> 
          <Text style={styles.subValue}>{exercise.equipment}</Text>
       </Text>
       </View>
