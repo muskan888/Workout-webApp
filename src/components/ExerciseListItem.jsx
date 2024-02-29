@@ -21,6 +21,7 @@ export default function ExerciseListItem({item}){
       borderRadius:10,
       gap:5,
       marginHorizontal:2,
+      
       //shadow
       shadowColor: "#000",
       shadowOffset: {

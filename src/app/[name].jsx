@@ -8,6 +8,7 @@ import {useQuery} from '@tanstack/react-query';
 import graphqlClient from '../graphqlClient';
 import { ActivityIndicator } from 'react-native-web';
 import NewSetInput from '../components/NewSetInput';
+import SetsList from '../components/SetsList';
 const exerciseQuery=gql`
   query exercises($name: String) {
     exercises(name: $name) {
@@ -59,7 +60,8 @@ export default function ExerciseDetaulsScreen(){
       <Text onPress={()=>setInstructionExpanded(!isInstructionExpanded)}
       style={styles.seemore}>
         {isInstructionExpanded? 'View less': 'View more'}</Text>
-        <NewSetInput/>
+        < NewSetInput exerciseName={exercise.name}/>
+        <SetsList/>
       </ScrollView>
        
       
@@ -69,11 +71,13 @@ const styles=StyleSheet.create({
     container:{
         padding:10,
         gap:10,
+        
     },
       exerciseName: {
         fontSize: 20,
         fontWeight:'500',
         marginBottom:5,
+        alignContent:"center"
     
       },
       exerciseSubtitle:{

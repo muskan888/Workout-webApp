@@ -1,0 +1,32 @@
+type DocumentsEntry {
+  _id: String
+  exercise: String
+  reps: Int
+  weight: Float
+}
+
+type Root {
+  documents: [DocumentsEntry]
+}
+
+type Query {
+  sets(collection: String, dataSource: String, database: String): Root
+    @rest(
+      method: POST
+      endpoint: "https://us-east-2.aws.data.mongodb-api.com/app/data-bxtsl/endpoint/data/v1/action/find"
+      headers: [
+        { name: "access-control-request-headers", value: "*" }
+        {
+          name: "api-key"
+          value: "cydLnhWCMOTUvrxxtoN7V96qKyqRgmJhK9fJTOxIEF854pdxmKPm3miIaNBiAWTa"
+        }
+      ],
+      postbody: """
+      {
+        "collection": "sets",
+        "dataSource": "Cluster3",
+        "database": "Workouts"
+      }
+     """
+    )
+}
